@@ -8,16 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @StateObject private var viewModel = PMRViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        VStack(spacing: 30) {
+            
+            Text(viewModel.currentInstruction)
+                .font(.title2)
+                .multilineTextAlignment(.center)
+            
+            if viewModel.isRunning {
+                Button("Stop") {
+                    viewModel.stopSession()
+                }
+            } else {
+                Button("Start PMR") {
+                    viewModel.startSession()
+                }
+            }
         }
         .padding()
     }
 }
+
 
 #Preview {
     ContentView()
