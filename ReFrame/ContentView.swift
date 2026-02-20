@@ -26,7 +26,7 @@ struct ContentView: View {
                     .fill(colorForStep(viewModel.currentStepType))
                     .overlay(
                         Circle()
-                            .stroke(Color.primary.opacity(0.2), lineWidth: 2)
+                            .stroke(Color.primary.opacity(0.08), lineWidth: 1)
                     )
                     .frame(width: 120, height: 120)
                     .scaleEffect(scaleForStep(viewModel.currentStepType))
