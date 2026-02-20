@@ -10,8 +10,6 @@ import SwiftUI
 struct PMRSessionView: View {
     
     @StateObject private var viewModel = PMRViewModel()
-    @State private var animatePulse = false
-    @State private var pulseAmount: CGFloat = 1.0
     
     var body: some View {
         ZStack {
@@ -33,28 +31,31 @@ struct PMRSessionView: View {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white)
                 
+              
+                ZStack {
+                    if viewModel.isRunning {
+                        Circle()
+                            .fill(colorForStep(viewModel.currentStepType))
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                            )
+                            .frame(width: 120, height: 120)
+                            .scaleEffect(scaleForStep(viewModel.currentStepType))
+                            .opacity(opacityForStep(viewModel.currentStepType))
+                            .animation(
+                                .easeInOut(duration: animationDuration(viewModel.currentStepType)),
+                                value: viewModel.currentStepType
+                            )
+                    }
+                }
+                .frame(height: 140)   // prevents layout jumping
+                
                 if viewModel.isRunning {
-                    
-                    Circle()
-                        .fill(colorForStep(viewModel.currentStepType))
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                        )
-                        .frame(width: 120, height: 120)
-                        .scaleEffect(scaleForStep(viewModel.currentStepType))
-                        .opacity(opacityForStep(viewModel.currentStepType))
-                        .animation(
-                            .easeInOut(duration: animationDuration(viewModel.currentStepType)),
-                            value: viewModel.currentStepType
-                        )
-                    
                     Button("Stop") {
                         viewModel.stopSession()
                     }
-                    
                 } else {
-                    
                     Button("Start PMR") {
                         viewModel.startSession()
                     }
@@ -106,11 +107,7 @@ struct PMRSessionView: View {
         case .neutral: return 2.5
         }
     }
-
-
 }
-
-
 
 #Preview {
     PMRSessionView()
