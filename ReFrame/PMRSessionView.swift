@@ -14,41 +14,54 @@ struct PMRSessionView: View {
     @State private var pulseAmount: CGFloat = 1.0
     
     var body: some View {
-        VStack(spacing: 40) {
+        ZStack {
             
-            Text(viewModel.currentInstruction)
-                .font(.title2)
-                .multilineTextAlignment(.center)
+            LinearGradient(
+                colors: [
+                    Color(red: 0.04, green: 0.07, blue: 0.18),
+                    Color(red: 0.18, green: 0.28, blue: 0.45)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
             
-            if viewModel.isRunning {
+            VStack(spacing: 40) {
                 
-                Circle()
-                    .fill(colorForStep(viewModel.currentStepType))
-                    .overlay(
-                        Circle()
-                            .stroke(Color.primary.opacity(0.08), lineWidth: 1)
-                    )
-                    .frame(width: 120, height: 120)
-                    .scaleEffect(scaleForStep(viewModel.currentStepType))
-                    .opacity(opacityForStep(viewModel.currentStepType))
-                    .animation(
-                        .easeInOut(duration: animationDuration(viewModel.currentStepType)),
-                        value: viewModel.currentStepType
-                    )
-
+                Text(viewModel.currentInstruction)
+                    .font(.title2)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.white)
                 
-                Button("Stop") {
-                    viewModel.stopSession()
-                }
-                
-            } else {
-                
-                Button("Start PMR") {
-                    viewModel.startSession()
+                if viewModel.isRunning {
+                    
+                    Circle()
+                        .fill(colorForStep(viewModel.currentStepType))
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                        )
+                        .frame(width: 120, height: 120)
+                        .scaleEffect(scaleForStep(viewModel.currentStepType))
+                        .opacity(opacityForStep(viewModel.currentStepType))
+                        .animation(
+                            .easeInOut(duration: animationDuration(viewModel.currentStepType)),
+                            value: viewModel.currentStepType
+                        )
+                    
+                    Button("Stop") {
+                        viewModel.stopSession()
+                    }
+                    
+                } else {
+                    
+                    Button("Start PMR") {
+                        viewModel.startSession()
+                    }
                 }
             }
+            .padding()
         }
-        .padding()
     }
     
     func scaleForStep(_ type: StepType) -> CGFloat {
@@ -100,5 +113,5 @@ struct PMRSessionView: View {
 
 
 #Preview {
-    ContentView()
+    PMRSessionView()
 }
