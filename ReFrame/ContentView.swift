@@ -11,6 +11,7 @@ struct ContentView: View {
     
     @StateObject private var viewModel = PMRViewModel()
     @State private var animatePulse = false
+    @State private var pulseAmount: CGFloat = 1.0
     
     var body: some View {
         VStack(spacing: 40) {
@@ -23,6 +24,10 @@ struct ContentView: View {
                 
                 Circle()
                     .fill(colorForStep(viewModel.currentStepType))
+                    .overlay(
+                        Circle()
+                            .stroke(Color.primary.opacity(0.2), lineWidth: 2)
+                    )
                     .frame(width: 120, height: 120)
                     .scaleEffect(scaleForStep(viewModel.currentStepType))
                     .opacity(opacityForStep(viewModel.currentStepType))
@@ -52,30 +57,30 @@ struct ContentView: View {
         case .exhale: return 0.8
         case .tense: return 0.75
         case .release: return 1.1
-        case .neutral: return 1.0
+        case .neutral: return 1.05
         }
     }
 
     func opacityForStep(_ type: StepType) -> Double {
         switch type {
-        case .inhale: return 0.35
-        case .exhale: return 0.25
-        case .tense: return 0.5
-        case .release: return 0.2
-        case .neutral: return 0.3
+        case .inhale: return 0.55
+        case .exhale: return 0.45
+        case .tense: return 0.65
+        case .release: return 0.5
+        case .neutral: return 0.5
         }
     }
 
     func colorForStep(_ type: StepType) -> Color {
         switch type {
         case .inhale, .exhale:
-            return Color.blue.opacity(0.2)
+            return Color.accentColor.opacity(0.35)
         case .tense:
-            return Color.orange.opacity(0.25)
+            return Color.orange.opacity(0.4)
         case .release:
-            return Color.green.opacity(0.2)
+            return Color.green.opacity(0.35)
         case .neutral:
-            return Color.gray.opacity(0.2)
+            return Color.gray.opacity(0.25)
         }
     }
 
@@ -85,7 +90,7 @@ struct ContentView: View {
         case .exhale: return 6
         case .tense: return 4
         case .release: return 3
-        case .neutral: return 0.4
+        case .neutral: return 2.5
         }
     }
 
