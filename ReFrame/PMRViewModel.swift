@@ -8,17 +8,21 @@
 import Foundation
 import Combine
 
+
 class PMRViewModel: ObservableObject {
     
     @Published var currentInstruction: String = "Ready to begin?"
     @Published var isRunning = false
+    @Published var currentStepType: StepType = .neutral
+
     
-    private let engine = PMREngine()
+    private let engine = ResetEngine()
     
     init() {
         engine.onStepChange = { [weak self] step in
             DispatchQueue.main.async {
                 self?.currentInstruction = step?.instruction ?? ""
+                self?.currentStepType = step?.type ?? .neutral
             }
         }
         
@@ -31,8 +35,9 @@ class PMRViewModel: ObservableObject {
     }
     
     func startSession() {
+        guard !isRunning else { return }
         isRunning = true
-        engine.start()
+        engine.start(with: ResetLibrary.microPMR)
     }
     
     func stopSession() {

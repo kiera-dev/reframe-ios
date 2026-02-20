@@ -1,5 +1,5 @@
 //
-//  PMRStep.swift
+//  PMREngine.swift
 //  ReFrame
 //
 //
@@ -7,31 +7,18 @@
 
 import Foundation
 
-struct PMRStep {
-    let instruction: String
-    let duration: TimeInterval
-}
-
-class PMREngine {
+class ResetEngine {
     
-    private(set) var steps: [PMRStep] = []
+    private var steps: [ResetStep] = []
     private var currentIndex = 0
     private var timer: Timer?
     
-    var onStepChange: ((PMRStep?) -> Void)?
+    var onStepChange: ((ResetStep?) -> Void)?
     var onSessionComplete: (() -> Void)?
     
-    init() {
-        steps = [
-            PMRStep(instruction: "Take a slow breath in.", duration: 5),
-            PMRStep(instruction: "Gently tense your shoulders.", duration: 5),
-            PMRStep(instruction: "Release your shoulders.", duration: 5),
-            PMRStep(instruction: "Clench your fists softly.", duration: 5),
-            PMRStep(instruction: "Release your hands.", duration: 5)
-        ]
-    }
-    
-    func start() {
+    func start(with protocol: ResetProtocol) {
+        stop()
+        steps = `protocol`.steps
         currentIndex = 0
         runStep()
     }
@@ -50,9 +37,12 @@ class PMREngine {
         let step = steps[currentIndex]
         onStepChange?(step)
         
-        timer = Timer.scheduledTimer(withTimeInterval: step.duration, repeats: false) { _ in
+        timer = Timer(timeInterval: step.duration, repeats: false) { [weak self] _ in
+            guard let self = self else { return }
             self.currentIndex += 1
             self.runStep()
         }
+        
+        RunLoop.main.add(timer!, forMode: .common)
     }
 }
