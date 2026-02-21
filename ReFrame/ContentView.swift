@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var showPMR = false
+    @State private var showMicro = false
+    @State private var showPanic = false
     
     var body: some View {
         NavigationStack {
@@ -20,13 +21,21 @@ struct ContentView: View {
                     .bold()
                 
                 Button("90-Second Micro Reset") {
-                    showPMR = true
+                    showMicro = true
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Button("Panic Spike Reset") {
+                    showPanic = true
                 }
                 .buttonStyle(.borderedProminent)
                 
             }
-            .navigationDestination(isPresented: $showPMR) {
-                PMRSessionView()
+            .navigationDestination(isPresented: $showMicro) {
+                PMRSessionView(protocol: ResetLibrary.microPMR)
+            }
+            .navigationDestination(isPresented: $showPanic) {
+                PMRSessionView(protocol: ResetLibrary.panicSpike)
             }
         }
     }

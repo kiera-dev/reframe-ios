@@ -1,24 +1,19 @@
-//
-//  PMRViewModel.swift
-//  ReFrame
-//
-//  Created by Kiera Castner on 2/18/26.
-//
-
 import Foundation
 import Combine
-
 
 class PMRViewModel: ObservableObject {
     
     @Published var currentInstruction: String = "Ready to begin?"
     @Published var isRunning = false
     @Published var currentStepType: StepType = .neutral
-
     
     private let engine = ResetEngine()
+    private let resetProtocol: ResetProtocol
     
-    init() {
+    // Updated initializer
+    init(protocol: ResetProtocol) {
+        self.resetProtocol = `protocol`
+        
         engine.onStepChange = { [weak self] step in
             DispatchQueue.main.async {
                 self?.currentInstruction = step?.instruction ?? ""
@@ -30,6 +25,7 @@ class PMRViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self?.isRunning = false
                 self?.currentInstruction = "Session complete."
+                self?.currentStepType = .neutral
             }
         }
     }
@@ -37,7 +33,7 @@ class PMRViewModel: ObservableObject {
     func startSession() {
         guard !isRunning else { return }
         isRunning = true
-        engine.start(with: ResetLibrary.microPMR)
+        engine.start(with: resetProtocol)   // Uses injected protocol
     }
     
     func stopSession() {
