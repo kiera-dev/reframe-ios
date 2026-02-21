@@ -20,13 +20,13 @@ struct ContentView: View {
                     .font(.largeTitle)
                     .bold()
                 
-                Button("90-Second Micro Reset") {
-                    showMicro = true
+                Button("Panic Spike Reset") {
+                    showPanic = true
                 }
                 .buttonStyle(.borderedProminent)
                 
-                Button("Panic Spike Reset") {
-                    showPanic = true
+                Button("90-Second Micro Reset") {
+                    showMicro = true
                 }
                 .buttonStyle(.borderedProminent)
                 

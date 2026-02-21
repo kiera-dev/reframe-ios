@@ -58,6 +58,13 @@ struct PMRSessionView: View {
                 .frame(height: 140)
                 
                 if viewModel.isRunning {
+                    if viewModel.isManualMode {
+                        Button("Next") {
+                            viewModel.nextStep()
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    
                     Button("Stop") {
                         viewModel.stopSession()
                     }
@@ -65,6 +72,7 @@ struct PMRSessionView: View {
                     Button("Start") {
                         viewModel.startSession()
                     }
+                    .buttonStyle(.borderedProminent)
                 }
             }
             .padding()
