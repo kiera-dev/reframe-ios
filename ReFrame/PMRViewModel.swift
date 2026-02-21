@@ -43,5 +43,7 @@ class PMRViewModel: ObservableObject {
     func stopSession() {
         isRunning = false
         engine.stop()
+        currentInstruction = "Ready to begin?"
+        currentStepType = .neutral
     }
 }
