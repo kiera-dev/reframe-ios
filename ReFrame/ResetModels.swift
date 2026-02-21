@@ -25,5 +25,7 @@ struct ResetStep {
 struct ResetProtocol {
     let name: String
     let steps: [ResetStep]
+    let isManual: Bool
 }
+
 

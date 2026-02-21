@@ -9,7 +9,14 @@ import SwiftUI
 
 struct PMRSessionView: View {
     
-    @StateObject private var viewModel = PMRViewModel()
+    @StateObject private var viewModel: PMRViewModel
+    
+    // NEW initializer
+    init(protocol: ResetProtocol) {
+        _viewModel = StateObject(
+            wrappedValue: PMRViewModel(protocol: `protocol`)
+        )
+    }
     
     var body: some View {
         ZStack {
@@ -31,7 +38,6 @@ struct PMRSessionView: View {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white)
                 
-              
                 ZStack {
                     if viewModel.isRunning {
                         Circle()
@@ -49,21 +55,31 @@ struct PMRSessionView: View {
                             )
                     }
                 }
-                .frame(height: 140)   // prevents layout jumping
+                .frame(height: 140)
                 
                 if viewModel.isRunning {
+                    if viewModel.isManualMode {
+                        Button("Next") {
+                            viewModel.nextStep()
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    
                     Button("Stop") {
                         viewModel.stopSession()
                     }
                 } else {
-                    Button("Start PMR") {
+                    Button("Start") {
                         viewModel.startSession()
                     }
+                    .buttonStyle(.borderedProminent)
                 }
             }
             .padding()
         }
     }
+    
+    // MARK: - Animation Helpers
     
     func scaleForStep(_ type: StepType) -> CGFloat {
         switch type {
@@ -110,5 +126,5 @@ struct PMRSessionView: View {
 }
 
 #Preview {
-    PMRSessionView()
+    PMRSessionView(protocol: ResetLibrary.microPMR)
 }
