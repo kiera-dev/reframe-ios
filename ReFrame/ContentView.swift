@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var showMicro = false
     @State private var showPanic = false
     @State private var showSTOP = false
+    @State private var showRumination = false
     
     var body: some View {
         NavigationStack {
@@ -23,6 +24,11 @@ struct ContentView: View {
                 
                 Button("Panic Spike Reset") {
                     showPanic = true
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Button("Rumination Loop Interrupt") {
+                    showRumination = true
                 }
                 .buttonStyle(.borderedProminent)
                 
@@ -39,6 +45,9 @@ struct ContentView: View {
             }
             .navigationDestination(isPresented: $showPanic) {
                 PMRSessionView(protocol: ResetLibrary.panicSpike)
+            }
+            .navigationDestination(isPresented: $showRumination) {
+                PMRSessionView(protocol: ResetLibrary.ruminationInterrupt)
             }
             .navigationDestination(isPresented: $showSTOP) {
                 PMRSessionView(protocol: ResetLibrary.stopProtocol)
