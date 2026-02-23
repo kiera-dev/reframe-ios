@@ -61,6 +61,43 @@ struct ResetLibrary {
         isManual: true
     )
     
+    static let ruminationInterrupt = ResetProtocol(
+        name: "Rumination Loop Interrupt",
+        steps: [
+            ResetStep(
+                instruction: "Look around.",
+                duration: 0,
+                type: .neutral,
+                helperText: "Name 5 things you can see."
+            ),
+            ResetStep(
+                instruction: "Listen carefully.",
+                duration: 0,
+                type: .neutral,
+                helperText: "Name 4 things you can hear."
+            ),
+            ResetStep(
+                instruction: "Notice your body.",
+                duration: 0,
+                type: .neutral,
+                helperText: "Name 3 things you can physically feel."
+            ),
+            ResetStep(
+                instruction: "Name 2 things you can smell.",
+                duration: 0,
+                type: .neutral,
+                helperText: "Take 2 slow breaths."
+            ),
+            ResetStep(
+                instruction: "Take a slow breath. Return to the present.",
+                duration: 0,
+                type: .neutral,
+                helperText: "What is happening right now — not in your head, but here?"
+            )
+        ],
+        isManual: true
+    )
+    
     static let stopProtocol = ResetProtocol(
         name: "STOP",
         steps: [
