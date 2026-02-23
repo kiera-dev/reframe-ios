@@ -47,7 +47,7 @@ struct PMRSessionView: View {
                 }
                 
                 ZStack {
-                    if viewModel.isRunning {
+                    if viewModel.isRunning && viewModel.currentStepType.showsCircle {
                         Circle()
                             .fill(colorForStep(viewModel.currentStepType))
                             .overlay(
@@ -63,7 +63,7 @@ struct PMRSessionView: View {
                             )
                     }
                 }
-                .frame(height: 140)
+                .frame(height: viewModel.currentStepType.showsCircle ? 140 : 40)
                 
                 if viewModel.isRunning {
                     if viewModel.isManualMode {

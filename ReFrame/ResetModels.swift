@@ -16,6 +16,17 @@ enum StepType {
     case neutral
 }
 
+extension StepType {
+    var showsCircle: Bool {
+        switch self {
+        case .inhale, .exhale, .tense, .release:
+            return true
+        case .neutral:
+            return false
+        }
+    }
+}
+
 struct ResetStep {
     let instruction: String
     let duration: TimeInterval
