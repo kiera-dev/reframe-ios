@@ -11,6 +11,7 @@ struct ContentView: View {
     
     @State private var showMicro = false
     @State private var showPanic = false
+    @State private var showSTOP = false
     
     var body: some View {
         NavigationStack {
@@ -25,18 +26,27 @@ struct ContentView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 
+                Button("STOP Protocol") {
+                    showSTOP = true
+                }
+                .buttonStyle(.borderedProminent)
+                
                 Button("90-Second Micro Reset") {
                     showMicro = true
                 }
                 .buttonStyle(.borderedProminent)
                 
             }
-            .navigationDestination(isPresented: $showMicro) {
-                PMRSessionView(protocol: ResetLibrary.microPMR)
-            }
             .navigationDestination(isPresented: $showPanic) {
                 PMRSessionView(protocol: ResetLibrary.panicSpike)
             }
+            .navigationDestination(isPresented: $showSTOP) {
+                PMRSessionView(protocol: ResetLibrary.stopProtocol)
+            }
+            .navigationDestination(isPresented: $showMicro) {
+                PMRSessionView(protocol: ResetLibrary.microPMR)
+            }
+
         }
     }
 }

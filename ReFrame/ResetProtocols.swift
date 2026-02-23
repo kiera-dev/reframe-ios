@@ -61,6 +61,37 @@ struct ResetLibrary {
         isManual: true
     )
     
+    static let stopProtocol = ResetProtocol(
+        name: "STOP",
+        steps: [
+            ResetStep(
+                instruction: "Stop.",
+                duration: 0,
+                type: .neutral,
+                helperText: "Pause. Do not react yet."
+            ),
+            ResetStep(
+                instruction: "Take a break.",
+                duration: 0,
+                type: .neutral,
+                helperText: "Step away if needed. Change rooms. Get space."
+            ),
+            ResetStep(
+                instruction: "Observe.",
+                duration: 0,
+                type: .neutral,
+                helperText: "What am I feeling?\nWhat thoughts are here?\nWhat is my body doing?"
+            ),
+            ResetStep(
+                instruction: "Proceed intentionally.",
+                duration: 0,
+                type: .neutral,
+                helperText: "Choose your next move with awareness."
+            )
+        ],
+        isManual: true
+    )
+    
     static let microPMR = ResetProtocol(
         name: "90-Second Micro PMR",
         steps: [

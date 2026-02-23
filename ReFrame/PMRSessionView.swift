@@ -38,6 +38,14 @@ struct PMRSessionView: View {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white)
                 
+                if let helper = viewModel.currentHelperText {
+                    Text(helper)
+                        .font(.body)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.white.opacity(0.85))
+                        .padding(.horizontal)
+                }
+                
                 ZStack {
                     if viewModel.isRunning {
                         Circle()
@@ -65,7 +73,7 @@ struct PMRSessionView: View {
                         .buttonStyle(.borderedProminent)
                     }
                     
-                    Button("Stop") {
+                    Button("End Session") {
                         viewModel.stopSession()
                     }
                 } else {
