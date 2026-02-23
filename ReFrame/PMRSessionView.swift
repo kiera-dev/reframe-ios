@@ -38,8 +38,16 @@ struct PMRSessionView: View {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white)
                 
+                if let helper = viewModel.currentHelperText {
+                    Text(helper)
+                        .font(.body)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.white.opacity(0.85))
+                        .padding(.horizontal)
+                }
+                
                 ZStack {
-                    if viewModel.isRunning {
+                    if viewModel.isRunning && viewModel.currentStepType.showsCircle {
                         Circle()
                             .fill(colorForStep(viewModel.currentStepType))
                             .overlay(
@@ -55,7 +63,7 @@ struct PMRSessionView: View {
                             )
                     }
                 }
-                .frame(height: 140)
+                .frame(height: viewModel.currentStepType.showsCircle ? 140 : 40)
                 
                 if viewModel.isRunning {
                     if viewModel.isManualMode {
@@ -65,7 +73,7 @@ struct PMRSessionView: View {
                         .buttonStyle(.borderedProminent)
                     }
                     
-                    Button("Stop") {
+                    Button("End Session") {
                         viewModel.stopSession()
                     }
                 } else {

@@ -9,6 +9,7 @@ class PMRViewModel: ObservableObject {
     @Published var isRunning = false
     @Published var currentStepType: StepType = .neutral
     @Published var isManualMode = false
+    @Published var currentHelperText: String? = nil
     
     private let engine = ResetEngine()
     private let resetProtocol: ResetProtocol
@@ -21,6 +22,7 @@ class PMRViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self?.currentInstruction = step?.instruction ?? ""
                 self?.currentStepType = step?.type ?? .neutral
+                self?.currentHelperText = step?.helperText
             }
         }
         
@@ -47,6 +49,7 @@ class PMRViewModel: ObservableObject {
         isRunning = false
         engine.stop()
         currentInstruction = "Ready to begin?"
+        currentHelperText = nil
         currentStepType = .neutral
     }
     
