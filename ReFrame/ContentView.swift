@@ -29,8 +29,8 @@ struct ContentView: View {
                     ScrollView {
                         VStack(spacing: 16) {
                             ProtocolCard(title: "Panic Spike Reset") { showPanic = true }
-                            ProtocolCard(title: "Rumination Interrupt") { showRumination = true }
                             ProtocolCard(title: "STOP Protocol") { showSTOP = true }
+                            ProtocolCard(title: "Rumination Interrupt") { showRumination = true }
                             ProtocolCard(title: "90-Second Micro Reset") { showMicro = true }
                         }
                         .padding()

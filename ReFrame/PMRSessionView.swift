@@ -29,7 +29,8 @@ struct PMRSessionView: View {
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.white)
-                        .animation(.easeInOut, value: viewModel.currentInstruction)
+                        .id(viewModel.currentInstruction)  
+                        .transition(.opacity)
                     
                     if let helper = viewModel.currentHelperText {
                         Text(helper)
@@ -37,7 +38,8 @@ struct PMRSessionView: View {
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.white.opacity(0.7))
                             .padding(.horizontal, 30)
-                            .transition(.opacity.combined(with: .move(edge: .bottom)))
+                            .id(helper)
+                            .transition(.opacity)
                     }
                 }
                 .frame(height: 120) // Keeps text from jumping around
