@@ -10,9 +10,33 @@
 		935FD5242F463019008D783E /* ReFrame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		936886772F524328000C7B80 /* Exceptions for "ReFrame" folder in "ReFrame" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				README.md,
+			);
+			target = 935FD5232F463019008D783E /* ReFrame */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		936886782F524328000C7B80 /* Exceptions for "ReFrame" folder in "Compile Sources" phase from "ReFrame" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 935FD5202F463019008D783E /* Sources */;
+			membershipExceptions = (
+				README.md,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		935FD5262F463019008D783E /* ReFrame */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				936886772F524328000C7B80 /* Exceptions for "ReFrame" folder in "ReFrame" target */,
+				936886782F524328000C7B80 /* Exceptions for "ReFrame" folder in "Compile Sources" phase from "ReFrame" target */,
+			);
 			path = ReFrame;
 			sourceTree = "<group>";
 		};
