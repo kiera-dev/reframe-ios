@@ -20,67 +20,72 @@ struct PMRSessionView: View {
     
     var body: some View {
         ZStack {
+            CalmingBackground()
             
-            LinearGradient(
-                colors: [
-                    Color(red: 0.04, green: 0.07, blue: 0.18),
-                    Color(red: 0.18, green: 0.28, blue: 0.45)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-            
-            VStack(spacing: 40) {
-                
-                Text(viewModel.currentInstruction)
-                    .font(.title2)
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(.white)
-                
-                if let helper = viewModel.currentHelperText {
-                    Text(helper)
-                        .font(.body)
+            VStack(spacing: 50) {
+                VStack(spacing: 12) {
+                    Text(viewModel.currentInstruction)
+                        .font(.system(.title2, design: .rounded))
+                        .fontWeight(.medium)
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(.white.opacity(0.85))
-                        .padding(.horizontal)
+                        .foregroundStyle(.white)
+                        .animation(.easeInOut, value: viewModel.currentInstruction)
+                    
+                    if let helper = viewModel.currentHelperText {
+                        Text(helper)
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.white.opacity(0.7))
+                            .padding(.horizontal, 30)
+                            .transition(.opacity.combined(with: .move(edge: .bottom)))
+                    }
                 }
+                .frame(height: 120) // Keeps text from jumping around
                 
+                // --- THE NEW ANIMATED GLOWING CIRCLE ---
                 ZStack {
                     if viewModel.isRunning && viewModel.currentStepType.showsCircle {
+                        // Background Glow
                         Circle()
                             .fill(colorForStep(viewModel.currentStepType))
+                            .frame(width: 180, height: 180)
+                            .blur(radius: 40)
+                            .scaleEffect(scaleForStep(viewModel.currentStepType) * 1.2)
+                        
+                        // Main Circle
+                        Circle()
+                            .fill(.ultraThinMaterial) // Makes it look like frosted glass
                             .overlay(
                                 Circle()
-                                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                                    .stroke(colorForStep(viewModel.currentStepType).opacity(0.5), lineWidth: 3)
                             )
-                            .frame(width: 120, height: 120)
+                            .frame(width: 160, height: 160)
                             .scaleEffect(scaleForStep(viewModel.currentStepType))
-                            .opacity(opacityForStep(viewModel.currentStepType))
-                            .animation(
-                                .easeInOut(duration: animationDuration(viewModel.currentStepType)),
-                                value: viewModel.currentStepType
-                            )
                     }
                 }
-                .frame(height: viewModel.currentStepType.showsCircle ? 140 : 40)
+                .frame(height: 200)
+                .animation(.easeInOut(duration: animationDuration(viewModel.currentStepType)), value: viewModel.currentStepType)
                 
-                if viewModel.isRunning {
-                    if viewModel.isManualMode {
-                        Button("Next") {
-                            viewModel.nextStep()
+                // --- BUTTONS ---
+                VStack(spacing: 20) {
+                    if viewModel.isRunning {
+                        if viewModel.isManualMode {
+                            Button("Tap to Continue") { viewModel.nextStep() }
+                                .buttonStyle(.bordered)
+                                .tint(.white)
+                                .controlSize(.large)
                         }
-                        .buttonStyle(.borderedProminent)
+                        
+                        Button("End Session") { viewModel.stopSession() }
+                            .foregroundStyle(.white.opacity(0.5))
+                            .font(.subheadline)
+                    } else {
+                        Button("Begin Reset") { viewModel.startSession() }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.softTeal)
+                            .controlSize(.large)
+                            .clipShape(Capsule())
                     }
-                    
-                    Button("End Session") {
-                        viewModel.stopSession()
-                    }
-                } else {
-                    Button("Start") {
-                        viewModel.startSession()
-                    }
-                    .buttonStyle(.borderedProminent)
                 }
             }
             .padding()
