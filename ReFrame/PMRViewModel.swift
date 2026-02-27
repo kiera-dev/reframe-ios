@@ -2,6 +2,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 class PMRViewModel: ObservableObject {
     
@@ -20,9 +21,11 @@ class PMRViewModel: ObservableObject {
         
         engine.onStepChange = { [weak self] step in
             DispatchQueue.main.async {
-                self?.currentInstruction = step?.instruction ?? ""
-                self?.currentStepType = step?.type ?? .neutral
-                self?.currentHelperText = step?.helperText
+                withAnimation(.easeInOut(duration: 0.95)) {
+                    self?.currentInstruction = step?.instruction ?? ""
+                    self?.currentStepType = step?.type ?? .neutral
+                    self?.currentHelperText = step?.helperText
+                }
             }
         }
         

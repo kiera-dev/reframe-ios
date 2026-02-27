@@ -16,46 +16,59 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 30) {
+            ZStack {
+                CalmingBackground() // Using our new theme!
                 
-                Text("ReFrame")
-                    .font(.largeTitle)
-                    .bold()
-                
-                Button("Panic Spike Reset") {
-                    showPanic = true
+                VStack(spacing: 25) {
+                    Text("ReFrame")
+                        .font(.system(.largeTitle, design: .rounded))
+                        .bold()
+                        .foregroundStyle(.white)
+                        .padding(.top, 40)
+                    
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            ProtocolCard(title: "Panic Spike Reset") { showPanic = true }
+                            ProtocolCard(title: "STOP Protocol") { showSTOP = true }
+                            ProtocolCard(title: "Rumination Interrupt") { showRumination = true }
+                            ProtocolCard(title: "90-Second Micro Reset") { showMicro = true }
+                        }
+                        .padding()
+                    }
                 }
-                .buttonStyle(.borderedProminent)
-                
-                Button("Rumination Loop Interrupt") {
-                    showRumination = true
-                }
-                .buttonStyle(.borderedProminent)
-                
-                Button("STOP Protocol") {
-                    showSTOP = true
-                }
-                .buttonStyle(.borderedProminent)
-                
-                Button("90-Second Micro Reset") {
-                    showMicro = true
-                }
-                .buttonStyle(.borderedProminent)
-                
             }
-            .navigationDestination(isPresented: $showPanic) {
-                PMRSessionView(protocol: ResetLibrary.panicSpike)
-            }
-            .navigationDestination(isPresented: $showRumination) {
-                PMRSessionView(protocol: ResetLibrary.ruminationInterrupt)
-            }
-            .navigationDestination(isPresented: $showSTOP) {
-                PMRSessionView(protocol: ResetLibrary.stopProtocol)
-            }
-            .navigationDestination(isPresented: $showMicro) {
-                PMRSessionView(protocol: ResetLibrary.microPMR)
-            }
+            // Your existing .navigationDestination modifiers stay exactly the same here
+            .navigationDestination(isPresented: $showPanic) { PMRSessionView(protocol: ResetLibrary.panicSpike) }
+            .navigationDestination(isPresented: $showRumination) { PMRSessionView(protocol: ResetLibrary.ruminationInterrupt) }
+            .navigationDestination(isPresented: $showSTOP) { PMRSessionView(protocol: ResetLibrary.stopProtocol) }
+            .navigationDestination(isPresented: $showMicro) { PMRSessionView(protocol: ResetLibrary.microPMR) }
+        }
+    }
 
+
+    struct ProtocolCard: View {
+        let title: String
+        let action: () -> Void
+        
+        var body: some View {
+            Button(action: action) {
+                HStack {
+                    Text(title)
+                        .font(.headline)
+                    Spacer()
+                    Image(systemName: "arrow.right.circle.fill")
+                        .opacity(0.5)
+                }
+                .padding(.vertical, 20)
+                .padding(.horizontal)
+                .background(.white.opacity(0.08))
+                .cornerRadius(20)
+                .foregroundStyle(.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(.white.opacity(0.1), lineWidth: 1)
+                )
+            }
         }
     }
 }
