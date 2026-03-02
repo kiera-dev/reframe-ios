@@ -1,9 +1,5 @@
-//
-//  README.md
-//  ReFrame
-//
 
-//
+
 
 # ReFrame
 
@@ -12,6 +8,12 @@ ReFrame is a lightweight nervous system regulation app built in SwiftUI.
 It provides structured, guided reset protocols for moments of panic, overwhelm, or anxiety.
                                                     
 The end goal is to eventually connect with Meta Rayban, call up the app, and have Meta narrate in case of high anxiety or overwhelm.
+
+
+<p align="center">
+<img width="252" height="511" alt="Screenshot 2026-02-27 at 5 07 15 PM" src="https://github.com/user-attachments/assets/8070d258-8454-40e8-b346-8aff72e249ee" />
+<img width="252" height="518" alt="Screenshot 2026-02-27 at 5 10 31 PM" src="https://github.com/user-attachments/assets/5c063a89-a510-40f9-a5c9-533fcacfc19f" />
+</p>
 
 ---
 
