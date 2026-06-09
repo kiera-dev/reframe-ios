@@ -21,7 +21,7 @@ class PMRViewModel: ObservableObject {
         
         engine.onStepChange = { [weak self] step in
             DispatchQueue.main.async {
-                withAnimation(.easeInOut(duration: 0.95)) {
+                withAnimation(.spring(response: 0.55, dampingFraction: 0.82)) {
                     self?.currentInstruction = step?.instruction ?? ""
                     self?.currentStepType = step?.type ?? .neutral
                     self?.currentHelperText = step?.helperText

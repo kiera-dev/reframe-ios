@@ -29,8 +29,11 @@ struct PMRSessionView: View {
                         .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.white)
-                        .id(viewModel.currentInstruction)  
-                        .transition(.opacity)
+                        .id(viewModel.currentInstruction)
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .offset(y: 10)),
+                            removal: .opacity.combined(with: .offset(y: -10))
+                        ))
                     
                     if let helper = viewModel.currentHelperText {
                         Text(helper)
@@ -39,12 +42,15 @@ struct PMRSessionView: View {
                             .foregroundStyle(.white.opacity(0.7))
                             .padding(.horizontal, 30)
                             .id(helper)
-                            .transition(.opacity)
+                            .transition(.asymmetric(
+                                insertion: .opacity.combined(with: .offset(y: 8)),
+                                removal: .opacity.combined(with: .offset(y: -8))
+                            ))
                     }
                 }
-                .frame(height: 120) // Keeps text from jumping around
+                .frame(height: 120)
                 
-                // --- THE NEW ANIMATED GLOWING CIRCLE ---
+                // --- ANIMATED GLOWING CIRCLE ---
                 ZStack {
                     if viewModel.isRunning && viewModel.currentStepType.showsCircle {
                         // Background Glow
@@ -56,7 +62,7 @@ struct PMRSessionView: View {
                         
                         // Main Circle
                         Circle()
-                            .fill(.ultraThinMaterial) // Makes it look like frosted glass
+                            .fill(.ultraThinMaterial)
                             .overlay(
                                 Circle()
                                     .stroke(colorForStep(viewModel.currentStepType).opacity(0.5), lineWidth: 3)
@@ -66,7 +72,7 @@ struct PMRSessionView: View {
                     }
                 }
                 .frame(height: 200)
-                .animation(.easeInOut(duration: animationDuration(viewModel.currentStepType)), value: viewModel.currentStepType)
+                .animation(animationForStep(viewModel.currentStepType), value: viewModel.currentStepType)
                 
                 // --- BUTTONS ---
                 VStack(spacing: 20) {
@@ -95,6 +101,23 @@ struct PMRSessionView: View {
     }
     
     // MARK: - Animation Helpers
+    
+    // Per-phase animation curves: inhale/exhale use a sinusoidal ease that lingers
+    // at both extremes (feels like a real breath); tense snaps in; release bounces out.
+    func animationForStep(_ type: StepType) -> Animation {
+        switch type {
+        case .inhale:
+            return .timingCurve(0.37, 0, 0.63, 1, duration: 4)
+        case .exhale:
+            return .timingCurve(0.37, 0, 0.63, 1, duration: 6)
+        case .tense:
+            return .easeIn(duration: 4)
+        case .release:
+            return .spring(response: 3, dampingFraction: 0.72)
+        case .neutral:
+            return .easeInOut(duration: 2.5)
+        }
+    }
     
     func scaleForStep(_ type: StepType) -> CGFloat {
         switch type {
@@ -126,16 +149,6 @@ struct PMRSessionView: View {
             return Color.green.opacity(0.35)
         case .neutral:
             return Color.gray.opacity(0.25)
-        }
-    }
-
-    func animationDuration(_ type: StepType) -> Double {
-        switch type {
-        case .inhale: return 4
-        case .exhale: return 6
-        case .tense: return 4
-        case .release: return 3
-        case .neutral: return 2.5
         }
     }
 }

@@ -14,18 +14,24 @@ extension Color {
 }
 
 struct CalmingBackground: View {
+    @State private var drifting = false
+
     var body: some View {
         ZStack {
             Color.midnightDeep.ignoresSafeArea()
-            // These circles create a soft, unmoving "aura" in the background
             Circle()
                 .fill(Color.softTeal.opacity(0.12))
                 .blur(radius: 100)
-                .offset(x: -150, y: -200)
+                .offset(x: drifting ? -130 : -150, y: drifting ? -215 : -200)
             Circle()
                 .fill(Color.calmSage.opacity(0.1))
                 .blur(radius: 100)
-                .offset(x: 150, y: 300)
+                .offset(x: drifting ? 165 : 150, y: drifting ? 285 : 300)
+        }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 9).repeatForever(autoreverses: true)) {
+                drifting = true
+            }
         }
     }
 }
