@@ -66,6 +66,7 @@ class ResetEngine {
     
     
     deinit {
+        stop()
         print("ResetEngine deallocated")
     }
 }

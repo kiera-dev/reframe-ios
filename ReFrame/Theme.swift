@@ -152,26 +152,43 @@ struct CalmingBackground: View {
 }
 
 // Slowly undulating mesh gradient. Control points drift on ~30-60s cycles so
-// the movement is felt more than seen.
+// the movement is felt more than seen. Renders statically when Reduce Motion
+// is enabled.
 @available(iOS 18.0, *)
 private struct AnimatedMeshBackground: View {
     let theme: AppTheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private static let restingPoints: [SIMD2<Float>] = [
+        [0, 0], [0.5, 0], [1, 0],
+        [0, 0.5], [0.5, 0.5], [1, 0.5],
+        [0, 1], [0.5, 1], [1, 1]
+    ]
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 20.0)) { timeline in
-            let t = timeline.date.timeIntervalSinceReferenceDate
+        if reduceMotion {
             MeshGradient(
                 width: 3,
                 height: 3,
-                points: [
-                    [0, 0], [Float(0.5 + 0.10 * sin(t * 0.11)), 0], [1, 0],
-                    [0, Float(0.5 + 0.09 * sin(t * 0.13))],
-                    [Float(0.5 + 0.14 * sin(t * 0.19)), Float(0.5 + 0.14 * cos(t * 0.15))],
-                    [1, Float(0.5 + 0.08 * cos(t * 0.12))],
-                    [0, 1], [Float(0.5 + 0.08 * cos(t * 0.09)), 1], [1, 1]
-                ],
+                points: Self.restingPoints,
                 colors: theme.meshColors
             )
+        } else {
+            TimelineView(.animation(minimumInterval: 1.0 / 12.0)) { timeline in
+                let t = timeline.date.timeIntervalSinceReferenceDate
+                MeshGradient(
+                    width: 3,
+                    height: 3,
+                    points: [
+                        [0, 0], [Float(0.5 + 0.10 * sin(t * 0.11)), 0], [1, 0],
+                        [0, Float(0.5 + 0.09 * sin(t * 0.13))],
+                        [Float(0.5 + 0.14 * sin(t * 0.19)), Float(0.5 + 0.14 * cos(t * 0.15))],
+                        [1, Float(0.5 + 0.08 * cos(t * 0.12))],
+                        [0, 1], [Float(0.5 + 0.08 * cos(t * 0.09)), 1], [1, 1]
+                    ],
+                    colors: theme.meshColors
+                )
+            }
         }
     }
 }
@@ -180,6 +197,7 @@ private struct AnimatedMeshBackground: View {
 private struct DriftingAuraBackground: View {
     let theme: AppTheme
     @State private var drifting = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var gradientColors: [Color] {
         switch theme {
@@ -213,6 +231,7 @@ private struct DriftingAuraBackground: View {
                 .offset(x: drifting ? 140 : 60, y: drifting ? 240 : 330)
         }
         .onAppear {
+            guard !reduceMotion else { return }
             withAnimation(.easeInOut(duration: 12).repeatForever(autoreverses: true)) {
                 drifting = true
             }
