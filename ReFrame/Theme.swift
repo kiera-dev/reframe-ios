@@ -15,7 +15,7 @@ extension Color {
     static let calmSage = Color(red: 0.65, green: 0.75, blue: 0.68)
 
     static let dawnInk = Color(red: 0.22, green: 0.25, blue: 0.30)
-    static let dawnSage = Color(red: 0.45, green: 0.60, blue: 0.53)
+    static let dawnSage = Color(red: 0.40, green: 0.56, blue: 0.49)
 }
 
 // MARK: - App Theme
@@ -81,9 +81,9 @@ enum AppTheme: String, CaseIterable, Identifiable {
             ]
         case .dawn:
             return [
-                Color(red: 0.97, green: 0.94, blue: 0.89), Color(red: 0.91, green: 0.94, blue: 0.92), Color(red: 0.97, green: 0.90, blue: 0.84),
-                Color(red: 0.96, green: 0.89, blue: 0.83), Color(red: 0.97, green: 0.94, blue: 0.89), Color(red: 0.80, green: 0.87, blue: 0.81),
-                Color(red: 0.78, green: 0.85, blue: 0.79), Color(red: 0.91, green: 0.94, blue: 0.92), Color(red: 0.97, green: 0.94, blue: 0.89)
+                Color(red: 0.96, green: 0.92, blue: 0.85), Color(red: 0.82, green: 0.89, blue: 0.87), Color(red: 0.96, green: 0.84, blue: 0.75),
+                Color(red: 0.95, green: 0.83, blue: 0.74), Color(red: 0.96, green: 0.91, blue: 0.84), Color(red: 0.68, green: 0.80, blue: 0.70),
+                Color(red: 0.63, green: 0.77, blue: 0.66), Color(red: 0.80, green: 0.88, blue: 0.85), Color(red: 0.95, green: 0.91, blue: 0.83)
             ]
         }
     }
@@ -99,13 +99,13 @@ enum AppTheme: String, CaseIterable, Identifiable {
         case (.twilight, .neutral):
             return Color(red: 0.60, green: 0.60, blue: 0.80)
         case (.dawn, .inhale), (.dawn, .exhale):
-            return Color(red: 0.35, green: 0.60, blue: 0.58)
+            return Color(red: 0.30, green: 0.56, blue: 0.54)
         case (.dawn, .tense):
-            return Color(red: 0.85, green: 0.55, blue: 0.40)
+            return Color(red: 0.82, green: 0.48, blue: 0.32)
         case (.dawn, .release):
-            return Color(red: 0.45, green: 0.65, blue: 0.48)
+            return Color(red: 0.38, green: 0.60, blue: 0.42)
         case (.dawn, .neutral):
-            return Color(red: 0.55, green: 0.55, blue: 0.58)
+            return Color(red: 0.50, green: 0.50, blue: 0.54)
         }
     }
 }
@@ -186,16 +186,16 @@ private struct DriftingAuraBackground: View {
         case .twilight:
             return [Color(red: 0.08, green: 0.09, blue: 0.22), .midnightDeep, Color(red: 0.14, green: 0.12, blue: 0.30)]
         case .dawn:
-            return [Color(red: 0.97, green: 0.94, blue: 0.89), Color(red: 0.91, green: 0.94, blue: 0.92), Color(red: 0.96, green: 0.89, blue: 0.83)]
+            return [Color(red: 0.96, green: 0.92, blue: 0.85), Color(red: 0.82, green: 0.89, blue: 0.87), Color(red: 0.95, green: 0.83, blue: 0.74)]
         }
     }
 
     private var blobA: Color {
-        theme == .twilight ? Color.softTeal.opacity(0.20) : Color(red: 0.80, green: 0.87, blue: 0.81).opacity(0.6)
+        theme == .twilight ? Color.softTeal.opacity(0.20) : Color(red: 0.63, green: 0.77, blue: 0.66).opacity(0.7)
     }
 
     private var blobB: Color {
-        theme == .twilight ? Color(red: 0.18, green: 0.13, blue: 0.34).opacity(0.55) : Color(red: 0.97, green: 0.90, blue: 0.84).opacity(0.8)
+        theme == .twilight ? Color(red: 0.18, green: 0.13, blue: 0.34).opacity(0.55) : Color(red: 0.95, green: 0.80, blue: 0.70).opacity(0.8)
     }
 
     var body: some View {
