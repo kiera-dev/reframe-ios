@@ -9,6 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @AppStorage("appTheme") private var themeRaw = AppTheme.twilight.rawValue
+    private var theme: AppTheme { AppTheme(rawValue: themeRaw) ?? .twilight }
+    
     @State private var showMicro = false
     @State private var showPanic = false
     @State private var showSTOP = false
@@ -17,58 +20,89 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                CalmingBackground() // Using our new theme!
+                CalmingBackground(theme: theme)
+                    .id(theme)
                 
-                VStack(spacing: 25) {
+                VStack(spacing: 8) {
+                    HStack {
+                        Spacer()
+                        ThemeToggleButton()
+                    }
+                    .padding(.horizontal)
+                    
                     Text("ReFrame")
-                        .font(.system(.largeTitle, design: .rounded))
-                        .bold()
-                        .foregroundStyle(.white)
-                        .padding(.top, 40)
+                        .font(.system(size: 40, weight: .thin, design: .rounded))
+                        .tracking(4)
+                        .foregroundStyle(theme.textPrimary)
+                    
+                    Text("take a moment")
+                        .font(.system(.subheadline, design: .rounded))
+                        .foregroundStyle(theme.textSecondary)
+                        .padding(.bottom, 24)
                     
                     ScrollView {
                         VStack(spacing: 16) {
-                            ProtocolCard(title: "Panic Spike Reset") { showPanic = true }
-                            ProtocolCard(title: "STOP Protocol") { showSTOP = true }
-                            ProtocolCard(title: "Rumination Interrupt") { showRumination = true }
-                            ProtocolCard(title: "90-Second Micro Reset") { showMicro = true }
+                            ProtocolCard(icon: "wind", title: "Panic Spike Reset", subtitle: "For sudden overwhelm", theme: theme) { showPanic = true }
+                            ProtocolCard(icon: "hand.raised", title: "STOP Protocol", subtitle: "Pause before reacting", theme: theme) { showSTOP = true }
+                            ProtocolCard(icon: "ear", title: "Rumination Interrupt", subtitle: "Come back to your senses", theme: theme) { showRumination = true }
+                            ProtocolCard(icon: "leaf", title: "90-Second Micro Reset", subtitle: "A quick full-body release", theme: theme) { showMicro = true }
                         }
                         .padding()
                     }
                 }
+                .padding(.top, 8)
             }
-            // Your existing .navigationDestination modifiers stay exactly the same here
             .navigationDestination(isPresented: $showPanic) { PMRSessionView(protocol: ResetLibrary.panicSpike) }
             .navigationDestination(isPresented: $showRumination) { PMRSessionView(protocol: ResetLibrary.ruminationInterrupt) }
             .navigationDestination(isPresented: $showSTOP) { PMRSessionView(protocol: ResetLibrary.stopProtocol) }
             .navigationDestination(isPresented: $showMicro) { PMRSessionView(protocol: ResetLibrary.microPMR) }
         }
+        .tint(theme.accent)
     }
 
 
     struct ProtocolCard: View {
+        let icon: String
         let title: String
+        let subtitle: String
+        let theme: AppTheme
         let action: () -> Void
         
         var body: some View {
             Button(action: action) {
-                HStack {
-                    Text(title)
-                        .font(.headline)
+                HStack(spacing: 16) {
+                    Image(systemName: icon)
+                        .font(.system(size: 20, weight: .light))
+                        .foregroundStyle(theme.accent)
+                        .frame(width: 44, height: 44)
+                        .background(theme.accent.opacity(0.12), in: Circle())
+                    
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(title)
+                            .font(.system(.headline, design: .rounded))
+                            .fontWeight(.medium)
+                        Text(subtitle)
+                            .font(.system(.footnote, design: .rounded))
+                            .foregroundStyle(theme.textSecondary)
+                    }
+                    
                     Spacer()
-                    Image(systemName: "arrow.right.circle.fill")
-                        .opacity(0.5)
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.footnote.weight(.light))
+                        .foregroundStyle(theme.textSecondary.opacity(0.6))
                 }
-                .padding(.vertical, 20)
-                .padding(.horizontal)
-                .background(.white.opacity(0.08))
-                .cornerRadius(20)
-                .foregroundStyle(.white)
+                .padding(.vertical, 16)
+                .padding(.horizontal, 18)
+                .background(theme.cardFill)
+                .clipShape(RoundedRectangle(cornerRadius: 24))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(.white.opacity(0.1), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(theme.cardStroke, lineWidth: 1)
                 )
+                .foregroundStyle(theme.textPrimary)
             }
+            .buttonStyle(.plain)
         }
     }
 }

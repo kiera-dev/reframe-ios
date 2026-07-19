@@ -3,6 +3,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import UIKit
 
 class PMRViewModel: ObservableObject {
     
@@ -14,6 +15,7 @@ class PMRViewModel: ObservableObject {
     
     private let engine = ResetEngine()
     private let resetProtocol: ResetProtocol
+    private let haptic = UIImpactFeedbackGenerator(style: .soft)
     
     init(protocol: ResetProtocol) {
         self.resetProtocol = `protocol`
@@ -21,7 +23,11 @@ class PMRViewModel: ObservableObject {
         
         engine.onStepChange = { [weak self] step in
             DispatchQueue.main.async {
-                withAnimation(.spring(response: 0.55, dampingFraction: 0.82)) {
+                if step != nil {
+                    self?.haptic.impactOccurred(intensity: 0.6)
+                }
+                // Slow, soft spring so text surfaces gently rather than snapping
+                withAnimation(.spring(response: 0.9, dampingFraction: 0.85)) {
                     self?.currentInstruction = step?.instruction ?? ""
                     self?.currentStepType = step?.type ?? .neutral
                     self?.currentHelperText = step?.helperText

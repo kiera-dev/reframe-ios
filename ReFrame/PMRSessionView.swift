@@ -11,6 +11,9 @@ struct PMRSessionView: View {
     
     @StateObject private var viewModel: PMRViewModel
     
+    @AppStorage("appTheme") private var themeRaw = AppTheme.twilight.rawValue
+    private var theme: AppTheme { AppTheme(rawValue: themeRaw) ?? .twilight }
+    
     // NEW initializer
     init(protocol: ResetProtocol) {
         _viewModel = StateObject(
@@ -20,79 +23,122 @@ struct PMRSessionView: View {
     
     var body: some View {
         ZStack {
-            CalmingBackground()
+            CalmingBackground(theme: theme)
             
             VStack(spacing: 50) {
-                VStack(spacing: 12) {
+                VStack(spacing: 14) {
                     Text(viewModel.currentInstruction)
-                        .font(.system(.title2, design: .rounded))
-                        .fontWeight(.medium)
+                        .font(.system(size: 26, weight: .light, design: .rounded))
+                        .tracking(0.5)
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(theme.textPrimary)
                         .id(viewModel.currentInstruction)
                         .transition(.asymmetric(
-                            insertion: .opacity.combined(with: .offset(y: 10)),
+                            insertion: .opacity.combined(with: .offset(y: 14)),
                             removal: .opacity.combined(with: .offset(y: -10))
                         ))
                     
                     if let helper = viewModel.currentHelperText {
                         Text(helper)
-                            .font(.body)
+                            .font(.system(.callout, design: .rounded))
                             .multilineTextAlignment(.center)
-                            .foregroundStyle(.white.opacity(0.7))
+                            .lineSpacing(4)
+                            .foregroundStyle(theme.textSecondary)
                             .padding(.horizontal, 30)
                             .id(helper)
                             .transition(.asymmetric(
-                                insertion: .opacity.combined(with: .offset(y: 8)),
+                                insertion: .opacity.combined(with: .offset(y: 10)),
                                 removal: .opacity.combined(with: .offset(y: -8))
                             ))
                     }
                 }
-                .frame(height: 120)
+                .frame(height: 130)
                 
-                // --- ANIMATED GLOWING CIRCLE ---
+                // --- BREATHING ORB ---
                 ZStack {
                     if viewModel.isRunning && viewModel.currentStepType.showsCircle {
-                        // Background Glow
-                        Circle()
-                            .fill(colorForStep(viewModel.currentStepType))
-                            .frame(width: 180, height: 180)
-                            .blur(radius: 40)
-                            .scaleEffect(scaleForStep(viewModel.currentStepType) * 1.2)
+                        let orb = theme.orbColor(for: viewModel.currentStepType)
+                        let scale = scaleForStep(viewModel.currentStepType)
                         
-                        // Main Circle
+                        // Soft outer glow
+                        Circle()
+                            .fill(RadialGradient(
+                                colors: [orb.opacity(0.55), orb.opacity(0)],
+                                center: .center,
+                                startRadius: 5,
+                                endRadius: 120
+                            ))
+                            .frame(width: 240, height: 240)
+                            .scaleEffect(scale * 1.25)
+                        
+                        // Ripple rings — scale at slightly different rates for a
+                        // water-ripple feel
+                        Circle()
+                            .stroke(orb.opacity(0.15), lineWidth: 1)
+                            .frame(width: 200, height: 200)
+                            .scaleEffect(scale * 1.18)
+                        
+                        Circle()
+                            .stroke(orb.opacity(0.30), lineWidth: 1)
+                            .frame(width: 180, height: 180)
+                            .scaleEffect(scale * 1.08)
+                        
+                        // Main orb: frosted glass with a glowing core
                         Circle()
                             .fill(.ultraThinMaterial)
                             .overlay(
-                                Circle()
-                                    .stroke(colorForStep(viewModel.currentStepType).opacity(0.5), lineWidth: 3)
+                                Circle().fill(RadialGradient(
+                                    colors: [orb.opacity(0.35), orb.opacity(0)],
+                                    center: .center,
+                                    startRadius: 5,
+                                    endRadius: 80
+                                ))
+                            )
+                            .overlay(
+                                Circle().stroke(orb.opacity(0.5), lineWidth: 1.5)
                             )
                             .frame(width: 160, height: 160)
-                            .scaleEffect(scaleForStep(viewModel.currentStepType))
+                            .scaleEffect(scale)
                     }
                 }
-                .frame(height: 200)
+                .frame(height: 240)
                 .animation(animationForStep(viewModel.currentStepType), value: viewModel.currentStepType)
                 
                 // --- BUTTONS ---
-                VStack(spacing: 20) {
+                VStack(spacing: 22) {
                     if viewModel.isRunning {
                         if viewModel.isManualMode {
-                            Button("Tap to Continue") { viewModel.nextStep() }
-                                .buttonStyle(.bordered)
-                                .tint(.white)
-                                .controlSize(.large)
+                            Button { viewModel.nextStep() } label: {
+                                Text("Continue")
+                                    .font(.system(.body, design: .rounded))
+                                    .fontWeight(.medium)
+                                    .tracking(1)
+                                    .foregroundStyle(theme.textPrimary)
+                                    .padding(.vertical, 14)
+                                    .padding(.horizontal, 44)
+                                    .background(.ultraThinMaterial, in: Capsule())
+                                    .overlay(Capsule().stroke(theme.cardStroke, lineWidth: 1))
+                            }
+                            .buttonStyle(.plain)
                         }
                         
                         Button("End Session") { viewModel.stopSession() }
-                            .foregroundStyle(.white.opacity(0.5))
-                            .font(.subheadline)
+                            .font(.system(.footnote, design: .rounded))
+                            .foregroundStyle(theme.textSecondary.opacity(0.7))
                     } else {
-                        Button("Begin Reset") { viewModel.startSession() }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.softTeal)
-                            .controlSize(.large)
-                            .clipShape(Capsule())
+                        Button { viewModel.startSession() } label: {
+                            Text("Begin Reset")
+                                .font(.system(.body, design: .rounded))
+                                .fontWeight(.medium)
+                                .tracking(1)
+                                .foregroundStyle(theme.textPrimary)
+                                .padding(.vertical, 16)
+                                .padding(.horizontal, 52)
+                                .background(theme.accent.opacity(theme == .twilight ? 0.35 : 0.40), in: Capsule())
+                                .background(.ultraThinMaterial, in: Capsule())
+                                .overlay(Capsule().stroke(theme.accent.opacity(0.5), lineWidth: 1))
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -126,29 +172,6 @@ struct PMRSessionView: View {
         case .tense: return 0.75
         case .release: return 1.1
         case .neutral: return 1.05
-        }
-    }
-
-    func opacityForStep(_ type: StepType) -> Double {
-        switch type {
-        case .inhale: return 0.55
-        case .exhale: return 0.45
-        case .tense: return 0.65
-        case .release: return 0.5
-        case .neutral: return 0.5
-        }
-    }
-
-    func colorForStep(_ type: StepType) -> Color {
-        switch type {
-        case .inhale, .exhale:
-            return Color.accentColor.opacity(0.35)
-        case .tense:
-            return Color.orange.opacity(0.4)
-        case .release:
-            return Color.green.opacity(0.35)
-        case .neutral:
-            return Color.gray.opacity(0.25)
         }
     }
 }
