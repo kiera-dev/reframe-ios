@@ -3,6 +3,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import UIKit
 
 class PMRViewModel: ObservableObject {
     
@@ -14,6 +15,7 @@ class PMRViewModel: ObservableObject {
     
     private let engine = ResetEngine()
     private let resetProtocol: ResetProtocol
+    private let haptic = UIImpactFeedbackGenerator(style: .soft)
     
     init(protocol: ResetProtocol) {
         self.resetProtocol = `protocol`
@@ -21,7 +23,12 @@ class PMRViewModel: ObservableObject {
         
         engine.onStepChange = { [weak self] step in
             DispatchQueue.main.async {
-                withAnimation(.easeInOut(duration: 0.95)) {
+                if step != nil {
+                    self?.haptic.impactOccurred(intensity: 0.6)
+                    self?.haptic.prepare()
+                }
+                // Slow, soft spring so text surfaces gently rather than snapping
+                withAnimation(.spring(response: 0.9, dampingFraction: 0.85)) {
                     self?.currentInstruction = step?.instruction ?? ""
                     self?.currentStepType = step?.type ?? .neutral
                     self?.currentHelperText = step?.helperText
@@ -31,9 +38,12 @@ class PMRViewModel: ObservableObject {
         
         engine.onSessionComplete = { [weak self] in
             DispatchQueue.main.async {
-                self?.isRunning = false
-                self?.currentInstruction = "Session complete."
-                self?.currentStepType = .neutral
+                withAnimation(.spring(response: 0.9, dampingFraction: 0.85)) {
+                    self?.isRunning = false
+                    self?.currentInstruction = "Session complete."
+                    self?.currentHelperText = nil
+                    self?.currentStepType = .neutral
+                }
             }
         }
     }
@@ -41,6 +51,7 @@ class PMRViewModel: ObservableObject {
     func startSession() {
         guard !isRunning else { return }
         isRunning = true
+        haptic.prepare()
         engine.start(with: resetProtocol)
     }
     
