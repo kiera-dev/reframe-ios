@@ -42,6 +42,8 @@ struct ContentView: View {
                     
                     ScrollView {
                         VStack(spacing: 16) {
+                            StreakView(theme: theme)
+                            
                             ProtocolCard(icon: "wind", title: "Panic Spike Reset", subtitle: "For sudden overwhelm", theme: theme) { showPanic = true }
                             ProtocolCard(icon: "hand.raised", title: "STOP Protocol", subtitle: "Pause before reacting", theme: theme) { showSTOP = true }
                             ProtocolCard(icon: "ear", title: "Rumination Interrupt", subtitle: "Come back to your senses", theme: theme) { showRumination = true }

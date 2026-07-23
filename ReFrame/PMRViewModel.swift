@@ -38,6 +38,9 @@ class PMRViewModel: ObservableObject {
         
         engine.onSessionComplete = { [weak self] in
             DispatchQueue.main.async {
+                // A session only reaches here by running to the end — early
+                // "End Session" taps go through stopSession() and don't count.
+                SessionStore.shared.recordCompletion()
                 withAnimation(.spring(response: 0.9, dampingFraction: 0.85)) {
                     self?.isRunning = false
                     self?.currentInstruction = "Session complete."
